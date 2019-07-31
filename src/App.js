@@ -1,10 +1,14 @@
 import React, {Component} from 'react';
-import ThreeScene from './Three.component';
+import DemoScene from './Three.component';
 
 class App extends Component {
+    state = {isMounted: true};
     render() {
+        const {isMounted = true} = this.state;
         return (
-                <ThreeScene/>
+            <>
+                {isMounted && <DemoScene />}
+            </>
         );
     }
 }
