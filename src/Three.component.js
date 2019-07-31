@@ -29,14 +29,16 @@ class DemoScene extends Component {
         const height = this.mount.clientHeight;
 
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color('white');
         this.camera = new THREE.PerspectiveCamera(
             75, // fov = field of view
             width / height, // aspect ratio
             0.1, // near plane
             1000 // far plane
         );
-        this.camera.position.z = 9; // is used here to set some distance from a cube that is located at z = 0
-        // OrbitControls allow a camera to orbit around the object
+        this.camera.position.z = 200;
+        this.camera.position.y = 100;
+        this.camera.position.x = 100;
         // https://threejs.org/docs/#examples/controls/OrbitControls
         this.controls = new OrbitControls( this.camera, this.mount );
         this.renderer = new THREE.WebGLRenderer();
@@ -62,11 +64,12 @@ class DemoScene extends Component {
         //     this.scene.add( gltf.scene );
         //
         // } );
-        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshPhongMaterial( {
             color: 0xE5ADFF,
             side: THREE.DoubleSide,
-            flatShading: true
+            flatShading: true,
+            opacity: 0.5
         } );
         this.cube = new THREE.Mesh( geometry, material );
         this.scene.add( this.cube );
@@ -75,6 +78,8 @@ class DemoScene extends Component {
         lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
         lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
         lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+        lights[ 3 ] = new THREE.DirectionalLight( 0xfffacc, 0.5 );
+
 
         lights[ 0 ].position.set( 0, 200, 0 );
         lights[ 1 ].position.set( 100, 200, 100 );
@@ -83,6 +88,7 @@ class DemoScene extends Component {
         this.scene.add( lights[ 0 ] );
         this.scene.add( lights[ 1 ] );
         this.scene.add( lights[ 2 ] );
+        this.scene.add( lights[ 3 ] );
     };
 
     startAnimationLoop = () => {
