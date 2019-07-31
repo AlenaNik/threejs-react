@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
 
+import Sofa from './chesterlow.glb';
+
+
 const style = {
-    height: 800
+    height: 600
 };
 
 class DemoScene extends Component {
@@ -41,10 +45,26 @@ class DemoScene extends Component {
     };
 
     addCustomSceneObjects = () => {
+        const loader = new GLTFLoader();
+        loader.load(
+            Sofa,
+            (gltf) => {
+                this.scene.add(gltf.scene);
+            }, null, (err) => {
+                console.log(err);
+            }
+        );
+
+        // Esto funciona pero no esta el sofa
+        // const loader = new GLTFLoader();
+        // loader.load( './chesterlow.glb', gltf => {
+        //
+        //     this.scene.add( gltf.scene );
+        //
+        // } );
         const geometry = new THREE.BoxGeometry(2, 2, 2);
         const material = new THREE.MeshPhongMaterial( {
-            color: 0x156289,
-            emissive: 0x072534,
+            color: 0xE5ADFF,
             side: THREE.DoubleSide,
             flatShading: true
         } );
@@ -70,10 +90,6 @@ class DemoScene extends Component {
         this.cube.rotation.y += 0.01;
 
         this.renderer.render( this.scene, this.camera );
-
-        // The window.requestAnimationFrame() method tells the browser that you wish to perform
-        // an animation and requests that the browser call a specified function
-        // to update an animation before the next repaint
         this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
     };
 
@@ -84,8 +100,6 @@ class DemoScene extends Component {
         this.renderer.setSize( width, height );
         this.camera.aspect = width / height;
 
-        // Note that after making changes to most of camera properties you have to call
-        // .updateProjectionMatrix for the changes to take effect.
         this.camera.updateProjectionMatrix();
     };
 
