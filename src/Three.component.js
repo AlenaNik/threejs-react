@@ -29,12 +29,12 @@ class DemoScene extends Component {
         const height = this.mount.clientHeight;
 
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color('white');
+        this.scene.background = new THREE.Color('black');
         this.camera = new THREE.PerspectiveCamera(
             75, // fov = field of view
             width / height, // aspect ratio
             0.1, // near plane
-            1000 // far plane
+            10000 // far plane
         );
         this.camera.position.z = 200;
         this.camera.position.y = 100;
@@ -52,6 +52,16 @@ class DemoScene extends Component {
             Sofa,
             (gltf) => {
                 this.scene.add(gltf.scene);
+                const rows = 20;
+                const cols = 40;
+                for(let i = 0; i < rows; i++ ){
+                    for(let e = 0; e < cols; e++) {
+                        const newObj = gltf.scene.clone();
+                        newObj.position.x += 400 * e - 400 * cols * 0.5;
+                        newObj.position.z += 200 * i - 200 * rows * 0.5;
+                        this.scene.add(newObj);
+                    }
+                }
             }, null, (err) => {
                 console.log(err);
             }
@@ -64,7 +74,7 @@ class DemoScene extends Component {
         //     this.scene.add( gltf.scene );
         //
         // } );
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshPhongMaterial( {
             color: 0xE5ADFF,
             side: THREE.DoubleSide,
@@ -72,13 +82,14 @@ class DemoScene extends Component {
             opacity: 0.5
         } );
         this.cube = new THREE.Mesh( geometry, material );
-        this.scene.add( this.cube );
-
+        //this.scene.add( this.cube );
+        console.log(this.cube);
         const lights = [];
         lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
         lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
         lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-        lights[ 3 ] = new THREE.DirectionalLight( 0xfffacc, 0.5 );
+        lights[ 3 ] = new THREE.DirectionalLight( 0xfffacc, 1 );
+        lights[ 4 ] = new THREE.AmbientLight( 0x404040, 50 );
 
 
         lights[ 0 ].position.set( 0, 200, 0 );
@@ -89,11 +100,12 @@ class DemoScene extends Component {
         this.scene.add( lights[ 1 ] );
         this.scene.add( lights[ 2 ] );
         this.scene.add( lights[ 3 ] );
+        this.scene.add( lights[ 4 ] );
     };
 
     startAnimationLoop = () => {
         this.cube.rotation.x += 0.01;
-        this.cube.rotation.y += 0.01;
+       this.cube.rotation.y += 0.01;
 
         this.renderer.render( this.scene, this.camera );
         this.requestID = window.requestAnimationFrame(this.startAnimationLoop);
